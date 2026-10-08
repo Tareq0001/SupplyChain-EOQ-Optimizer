@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SupplyChain EOQ Optimizer V2 | Nordic Serene Minimalist Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="nordic-theme">
+  <!-- Subtle Ambient Mist -->
+  <div class="mist-glow mist-top"></div>
+  <div class="mist-glow mist-bottom"></div>
+
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <div class="nordic-pill">
+        <span class="pill-dot"></span>
+        <span class="pill-text" data-i18n="badgeEngine">NORDIC SERENE MINIMALISM · INVENTORY & EOQ OPTIMIZER</span>
+      </div>
+      <h1 class="brand-title">
+        <span class="title-main" data-i18n="appTitle">SupplyChain Studio</span>
+        <span class="title-sub" data-i18n="appSub">Nordic Balance V2</span>
+      </h1>
+      <p class="brand-desc" data-i18n="appDesc">Wilson Economic Order Quantity, Stochastic Safety Stock Buffers & Multi-SKU ABC/XYZ Categorization</p>
+    </div>
+    
+    <div class="header-right">
+      <div class="nordic-state-badge">
+        <span class="nsb-label" data-i18n="policyStateLabel">POLICY BALANCE:</span>
+        <span class="nsb-val" id="policyStateText">OPTIMAL EOQ (s, Q)</span>
+      </div>
+      <button id="langToggle" class="btn-nordic-sec">
+        <span id="langLabel">العربية</span>
+      </button>
+      <button id="exportReportBtn" class="btn-nordic-prim">
+        <span data-i18n="exportBtn">Export Inventory Audit</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Presets Bar -->
+  <section class="nordic-card presets-section">
+    <div class="presets-container">
+      <div class="presets-label-wrap">
+        <span class="sage-leaf">🌿</span>
+        <span class="preset-label" data-i18n="presetsLabel">Calibrated Industry Presets:</span>
+      </div>
+      <div class="preset-buttons">
+        <button class="preset-btn active" data-preset="standard">
+          <span data-i18n="presetStd">Standard Manufacturing (D=10k, L=7d)</span>
+        </button>
+        <button class="preset-btn" data-preset="fmcg">
+          <span data-i18n="presetFmcg">High-Velocity FMCG (D=45k, L=3d)</span>
+        </button>
+        <button class="preset-btn" data-preset="aero">
+          <span data-i18n="presetAero">Aerospace Spare Parts (High Value, L=21d)</span>
+        </button>
+        <button class="preset-btn" data-preset="pharma">
+          <span data-i18n="presetPharma">Cold-Chain Pharma (99.9% Service Level)</span>
+        </button>
+      </div>
+
+      <button id="resetDefaultsBtn" class="btn-nordic-ghost">
+        <span data-i18n="resetBtn">Reset</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- KPI Cards Grid -->
+  <section class="kpi-grid">
+    <div class="kpi-card accent-sage">
+      <div class="kpi-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+      </div>
+      <div class="kpi-content">
+        <span class="kpi-label" data-i18n="kpiEOQ">Economic Order Quantity (EOQ)</span>
+        <div class="kpi-val" id="kpiEOQ">894 units</div>
+        <span class="kpi-sub" id="kpiEOQSub">Optimal lot size Q*</span>
+      </div>
+    </div>
+
+    <div class="kpi-card accent-sand">
+      <div class="kpi-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      </div>
+      <div class="kpi-content">
+        <span class="kpi-label" data-i18n="kpiCost">Total Inventory Cost</span>
+        <div class="kpi-val" id="kpiTotalCost">$4,472 / yr</div>
+        <span class="kpi-sub" data-i18n="kpiCostSub">Holding + Ordering Minimum</span>
+      </div>
+    </div>
+
+    <div class="kpi-card accent-sky">
+      <div class="kpi-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 14 14"/></svg>
+      </div>
+      <div class="kpi-content">
+        <span class="kpi-label" data-i18n="kpiROP">Reorder Point (ROP)</span>
+        <div class="kpi-val" id="kpiROP">243 units</div>
+        <span class="kpi-sub" id="kpiROPSub">Lead-time demand + Safety Stock</span>
+      </div>
+    </div>
+
+    <div class="kpi-card accent-pine">
+      <div class="kpi-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div class="kpi-content">
+        <span class="kpi-label" data-i18n="kpiSS">Safety Stock Buffer (SS)</span>
+        <div class="kpi-val" id="kpiSS">51 units</div>
+        <span class="kpi-sub" id="kpiSSSub">95% Service Level (Z = 1.65)</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Studio Main Layout -->
+  <main class="studio-layout">
+    <!-- Left Column: Parameters Controls -->
+    <section class="nordic-card controls-card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title" data-i18n="paramsTitle">Inventory Parameters</h2>
+          <p class="card-desc" data-i18n="paramsDesc">Calibrate annual demand, replenishment setup costs, holding rates, and lead times.</p>
+        </div>
+      </div>
+
+      <div class="controls-form">
+        <!-- Demand D -->
+        <div class="control-group">
+          <div class="control-header">
+            <label for="sliderD"><span data-i18n="paramD">Annual Demand (D)</span></label>
+            <span class="param-val" id="valD">10,000 units</span>
+          </div>
+          <input type="range" id="sliderD" min="1000" max="50000" step="500" value="10000">
+        </div>
+
+        <!-- Setup Cost S -->
+        <div class="control-group">
+          <div class="control-header">
+            <label for="sliderS"><span data-i18n="paramS">Ordering / Setup Cost (S)</span></label>
+            <span class="param-val" id="valS">$200 / order</span>
+          </div>
+          <input type="range" id="sliderS" min="20" max="600" step="10" value="200">
+        </div>
+
+        <!-- Unit Cost C & Holding Rate h -->
+        <div class="cost-row">
+          <div class="control-group">
+            <div class="control-header">
+              <label for="sliderC"><span data-i18n="paramC">Unit Cost (C)</span></label>
+              <span class="param-val" id="valC">$25.00</span>
+            </div>
+            <input type="range" id="sliderC" min="2" max="250" step="1" value="25">
+          </div>
+          <div class="control-group">
+            <div class="control-header">
+              <label for="sliderH"><span data-i18n="paramH">Holding Rate (h)</span></label>
+              <span class="param-val" id="valH">20% ($5/yr)</span>
+            </div>
+            <input type="range" id="sliderH" min="5" max="40" step="1" value="20">
+          </div>
+        </div>
+
+        <!-- Lead Time L & Service Level -->
+        <div class="cost-row">
+          <div class="control-group">
+            <div class="control-header">
+              <label for="sliderL"><span data-i18n="paramL">Lead Time (L)</span></label>
+              <span class="param-val" id="valL">7 days</span>
+            </div>
+            <input type="range" id="sliderL" min="1" max="30" step="1" value="7">
+          </div>
+          <div class="control-group">
+            <div class="control-header">
+              <label for="sliderService"><span data-i18n="paramService">Service Level</span></label>
+              <span class="param-val" id="valService">95.0%</span>
+            </div>
+            <input type="range" id="sliderService" min="85" max="99" step="1" value="95">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Column: Cost Convexity Canvas -->
+    <section class="nordic-card canvas-card">
+      <div class="card-header">
+        <div>
+          <h2 class="card-title" data-i18n="canvasTitle">Total Cost Curves & Trade-Off</h2>
+          <p class="card-desc" data-i18n="canvasDesc">Holding cost increases linearly while ordering cost decreases asymptotically.</p>
+        </div>
+      </div>
+
+      <div class="canvas-container">
+        <canvas id="costCanvas"></canvas>
+      </div>
+
+      <div class="nordic-legend">
+        <div class="nl-item"><span class="nl-line line-total"></span><span data-i18n="legTotal">Total Cost Curve</span></div>
+        <div class="nl-item"><span class="nl-line line-holding"></span><span data-i18n="legHolding">Holding Cost (H · Q/2)</span></div>
+        <div class="nl-item"><span class="nl-line line-ordering"></span><span data-i18n="legOrdering">Ordering Cost (S · D/Q)</span></div>
+        <div class="nl-item"><span class="nl-line line-opt"></span><span data-i18n="legOpt">Optimal EOQ Q*</span></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Detailed Tabbed Section -->
+  <section class="nordic-card detailed-section">
+    <div class="tabs-header">
+      <button class="tab-btn active" data-tab="tabSKU">
+        <span class="tab-icon">📦</span>
+        <span data-i18n="tabSKU">Multi-SKU Portfolio (ABC / XYZ Matrix)</span>
+      </button>
+      <button class="tab-btn" data-tab="tabMath">
+        <span class="tab-icon">📐</span>
+        <span data-i18n="tabMath">Stochastic Safety Stock Formulas</span>
+      </button>
+      <button class="tab-btn" data-tab="tabPolicy">
+        <span class="tab-icon">📋</span>
+        <span data-i18n="tabPolicy">Continuous Review (s, Q) Inventory Policy</span>
+      </button>
+    </div>
+
+    <div class="tabs-content">
+      <div class="tab-pane active" id="tabSKU">
+        <div class="table-responsive">
+          <table class="data-table" id="skuTable">
+            <!-- Injected via JS -->
+          </table>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="tabMath">
+        <div class="math-explainer" id="mathExplainer">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <div class="tab-pane" id="tabPolicy">
+        <div class="policy-card" id="policyCard">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-left">
+      <span class="nordic-leaf-dot">●</span>
+      <span data-i18n="footerStatus">Nordic Serene Minimalist Supply Chain Optimizer V2</span>
+    </div>
+    <div class="footer-right">
+      <span>Tareq0001 · Operations & Inventory Intelligence</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
